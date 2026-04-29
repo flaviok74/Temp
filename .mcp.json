@@ -3,6 +3,13 @@
     "playwright": {
       "command": "npx",
       "args": ["@playwright/mcp@latest"]
+    },
+    "glif": {
+      "command": "npx",
+      "args": ["-y", "@glifxyz/glif-mcp-server"],
+      "env": {
+        "GLIF_API_TOKEN": "${GLIF_API_TOKEN}"
+      }
     }
   }
 }
