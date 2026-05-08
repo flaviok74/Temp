@@ -7,15 +7,15 @@
     'use strict';
 
     const PALETTE = {
-        navy:    '#051C2C',
-        navy2:   '#0F3057',
-        blue:    '#2251FF',
-        blueSoft:'#3B6BFF',
-        gold:    '#C7A75A',
-        goldSoft:'#E5D4A1',
-        ink:     '#0B1B2B',
-        gray:    '#5C6B7A',
-        graySoft:'#B7C0CA',
+        navy:    '#0D2818',   /* deep forest */
+        navy2:   '#1B4332',   /* forest */
+        blue:    '#2D6A4F',   /* primary green */
+        blueSoft:'#40916C',   /* mid green */
+        gold:    '#52B788',   /* vibrant accent green */
+        goldSoft:'#95D5B2',   /* sage highlight */
+        ink:     '#1A1D1F',   /* near-black */
+        gray:    '#4A525A',   /* mid gray */
+        graySoft:'#B7BCC2',   /* light gray */
     };
 
     // ========= NAV ON SCROLL =========
