@@ -82,15 +82,17 @@
     if (typeof Chart === 'undefined') return;
 
     Chart.defaults.font.family = "'Inter', sans-serif";
-    Chart.defaults.font.size = 12;
-    Chart.defaults.color = PALETTE.gray;
-    Chart.defaults.borderColor = 'rgba(11, 27, 43, 0.08)';
+    Chart.defaults.font.size = 13;
+    Chart.defaults.font.weight = '600';
+    Chart.defaults.color = '#1F3243';
+    Chart.defaults.borderColor = 'rgba(11, 27, 43, 0.1)';
     Chart.defaults.plugins.legend.labels.usePointStyle = true;
     Chart.defaults.plugins.legend.labels.boxWidth = 8;
     Chart.defaults.plugins.legend.labels.padding = 18;
+    Chart.defaults.plugins.legend.labels.font = { size: 13, weight: '600' };
     Chart.defaults.plugins.tooltip.backgroundColor = PALETTE.navy;
-    Chart.defaults.plugins.tooltip.titleFont = { weight: '600', size: 12 };
-    Chart.defaults.plugins.tooltip.bodyFont = { size: 12 };
+    Chart.defaults.plugins.tooltip.titleFont = { weight: '700', size: 13 };
+    Chart.defaults.plugins.tooltip.bodyFont = { size: 13, weight: '500' };
     Chart.defaults.plugins.tooltip.padding = 12;
     Chart.defaults.plugins.tooltip.cornerRadius = 8;
     Chart.defaults.plugins.tooltip.boxPadding = 6;
