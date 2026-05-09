@@ -1,0 +1,401 @@
+{
+  "project": {
+    "name": "Ekoquim Financial Services",
+    "type": "Editorial landing page + printable PDF report",
+    "client": "Ekoquim",
+    "industry": "Financial engineering for the Brazilian chemical import industry",
+    "language": "pt-BR",
+    "design_reference": "McKinsey Insights report (numbered chapters, exhibits, pull quotes, KPI banners, serif headlines)",
+    "stack": ["HTML5", "CSS3", "vanilla JS", "Chart.js 4.4.0 (CDN)", "Python 3", "matplotlib", "WeasyPrint"],
+    "repository": "flaviok74/Temp",
+    "branch": "claude/ekoquim-landing-page-FIjTC",
+    "raw_html_url": "https://raw.githubusercontent.com/flaviok74/Temp/claude/ekoquim-landing-page-FIjTC/index.html",
+    "pdf_url": "https://github.com/flaviok74/Temp/raw/claude/ekoquim-landing-page-FIjTC/ekoquim-relatorio.pdf"
+  },
+
+  "files": [
+    { "path": "index.html",            "lines": 427,  "purpose": "Landing page markup (hero, 5 chapters, footer)" },
+    { "path": "styles.css",            "lines": 940,  "purpose": "Palette, glass morphism, parallax CSS, responsive grid" },
+    { "path": "script.js",             "lines": 330,  "purpose": "Parallax scroll, Chart.js exhibits, animated counters, IntersectionObserver reveal" },
+    { "path": "build_pdf.py",          "lines": 460,  "purpose": "matplotlib renders 4 PNGs + WeasyPrint composes 12-page A4 PDF" },
+    { "path": "ekoquim-relatorio.pdf", "lines": null, "purpose": "Generated 12-page A4 report, ~260 KB" },
+    { "path": "pdf-assets/exhibit1.png", "purpose": "Stacked bar — cost decomposition" },
+    { "path": "pdf-assets/exhibit2.png", "purpose": "Line — USD/BRL with hedge" },
+    { "path": "pdf-assets/exhibit3.png", "purpose": "Grouped bars — working capital released" },
+    { "path": "pdf-assets/exhibit4.png", "purpose": "Donut — economy composition" }
+  ],
+
+  "design_system": {
+    "palette": {
+      "navy_900":  "#0D2818",
+      "navy_800":  "#1B4332",
+      "navy_700":  "#2D5A3F",
+      "navy_600":  "#40916C",
+      "blue_500":  "#2D6A4F",
+      "blue_400":  "#40916C",
+      "gold":      "#95D5B2",
+      "gold_soft": "#B7E4C7",
+      "ink":       "#1A1D1F",
+      "paper":     "#F1EFE9",
+      "paper_2":   "#E6E3D9",
+      "gray_700":  "#4A525A",
+      "gray_600":  "#525860",
+      "gray_500":  "#6B7280",
+      "gray_300":  "#D4D7DB",
+      "line":      "rgba(26, 29, 31, 0.14)"
+    },
+    "fonts": {
+      "google_link": "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=Manrope:wght@400;500;600;700;800&display=swap",
+      "serif":  { "family": "Fraunces", "use": "headings, pull quotes, italic em accents", "weights": [500, 600, 700], "notes": "Optical sizing 9..144 enabled, italic enabled" },
+      "sans":   { "family": "Manrope",  "use": "body, navigation, KPI labels", "weights": [400, 500, 600, 700, 800] },
+      "body_defaults": { "size_px": 17, "weight": 500, "line_height": 1.65, "letter_spacing_em": -0.005, "color": "#1A1D1F" }
+    },
+    "glass": {
+      "light_bg":   "background: rgba(255,255,255,0.7); backdrop-filter: blur(20px) saturate(140%); border: 1px solid rgba(255,255,255,0.92); border-radius: 14px; box-shadow: 0 10px 30px -10px rgba(13,40,24,0.22);",
+      "dark_bg":    "background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18);",
+      "applied_to": ["stat-block", "summary-callout", "pillar", "chart-card", "kpi-banner", "cta-card"]
+    },
+    "parallax": {
+      "implementation": "Vanilla JS scroll listener (passive). Each parallax element has data-parallax='speed' attribute; transform applied via translate3d(0, scrollY * speed, 0).",
+      "speeds_used": [0.15, 0.25, 0.3, 0.4, 0.5, 0.7],
+      "elements": ["hero-bg", "hero-grid", "orb-1", "orb-2", "quote-bg", "cta-bg"]
+    },
+    "animations": {
+      "counters":    "Cubic ease, 1400ms duration, triggered by IntersectionObserver at threshold 0.6.",
+      "reveal":      "opacity 0→1 + translateY(30px→0), 0.8s ease, threshold 0.12.",
+      "pillar_hover":"translateY(-6px) + gradient bar (blue-500 → gold) reveals at top.",
+      "scroll_indicator":"Scaling pulse on a 1px gold line at hero bottom."
+    },
+    "breakpoints": {
+      "tablet": "1024px (pillars 2→1 col, charts 2→1 col, timeline horizontal→vertical, hero stats 4→2 cols)",
+      "mobile": "720px (nav collapses to CTA only, stats 2 cols, padding compresses, form 2→1 col)"
+    },
+    "shadows": {
+      "lg": "0 30px 80px -20px rgba(13, 40, 24, 0.45)",
+      "md": "0 10px 30px -10px rgba(13, 40, 24, 0.22)"
+    }
+  },
+
+  "navigation": {
+    "brand": {
+      "mark": "EK",
+      "name": "Ekoquim",
+      "subtitle": "Financial Services"
+    },
+    "links": [
+      { "label": "Sumário Executivo", "href": "#sumario" },
+      { "label": "Serviços",          "href": "#servicos" },
+      { "label": "Dados",             "href": "#dados" },
+      { "label": "Metodologia",       "href": "#metodologia" },
+      { "label": "Falar com especialista", "href": "#contato", "is_cta": true }
+    ]
+  },
+
+  "hero": {
+    "report_tag": "Relatório · Ekoquim Insights",
+    "report_date": "Maio 2026 · Volume IV",
+    "title_html": "Estruturas <em>financeiras</em> sob medida<br>para a indústria química brasileira.",
+    "lede": "Importação por encomenda, hedge cambial, financiamento de até 365 dias e fechamento de câmbio sem taxas — desenhados para reduzir custo total, proteger margens e liberar capital de giro.",
+    "stats": [
+      { "value": "4",   "suffix": "%",       "label": "Redução tributária via Santa Catarina", "animate_to": 4 },
+      { "value": "365", "suffix": "",        "label": "Dias de financiamento da operação",     "animate_to": 365 },
+      { "value": "0",   "suffix": " taxa",   "label": "Fechamento de câmbio para clientes",    "animate_to": 0 },
+      { "value": "100", "suffix": "%",       "label": "Proteção contra volatilidade do dólar", "animate_to": 100 }
+    ],
+    "ctas": [
+      { "label": "Ler relatório",        "href": "#sumario", "style": "primary" },
+      { "label": "Agendar diagnóstico →","href": "#contato", "style": "ghost" }
+    ]
+  },
+
+  "chapters": [
+    {
+      "number": "01",
+      "id": "sumario",
+      "title": "Sumário Executivo",
+      "h2": "A complexidade da operação cambial está corroendo margem da sua indústria.",
+      "body": [
+        "Empresas químicas brasileiras importadoras enfrentam três pressões simultâneas: <strong>volatilidade do real</strong>, <strong>custo tributário elevado</strong> e <strong>capital de giro travado</strong> em ciclos de até 12 meses.",
+        "A Ekoquim atua como parceira financeira de ponta a ponta na cadeia de importação de insumos químicos, combinando engenharia tributária via Santa Catarina, instrumentos derivativos para travar o câmbio e linhas de crédito estendidas para diluir o desembolso ao longo de até 365 dias.",
+        "Este relatório consolida os <strong>quatro pilares</strong> da nossa oferta financeira e apresenta os ganhos mensuráveis observados na carteira atual."
+      ],
+      "callout": {
+        "eyebrow": "Pull quote",
+        "quote": "Cada ponto percentual reduzido no custo de importação se traduz, em média, em <em>3,2 pontos</em> de margem operacional para o cliente final.",
+        "cite": "— Análise interna Ekoquim, base 2025"
+      }
+    },
+    {
+      "number": "02",
+      "id": "servicos",
+      "title": "Os quatro pilares",
+      "h2": "Quatro instrumentos. Uma única tese: previsibilidade financeira.",
+      "pillars": [
+        {
+          "num": "01",
+          "title": "Importação por encomenda",
+          "claim": "Redução de até <strong>4% nos custos tributários</strong> ao importar via regime especial de Santa Catarina.",
+          "bullets": [
+            "Estrutura via TTD 409/410 com benefício de ICMS",
+            "Cliente entra apenas como adquirente final",
+            "Sem necessidade de RADAR ou habilitação aduaneira própria",
+            "Logística porto-fábrica integrada"
+          ],
+          "metric_value": "−4%",
+          "metric_label": "custo tributário médio"
+        },
+        {
+          "num": "02",
+          "title": "Hedge cambial",
+          "claim": "Fixe a taxa do dólar no momento do pedido e <strong>elimine surpresas</strong> entre embarque e nacionalização.",
+          "bullets": [
+            "NDF (Non-Deliverable Forward) sob medida",
+            "Trava de PTAX ou taxa spot na data do contrato",
+            "Casamento perfeito com vencimento da operação",
+            "Sem chamada de margem para o cliente final"
+          ],
+          "metric_value": "±0,0%",
+          "metric_label": "exposição cambial residual"
+        },
+        {
+          "num": "03",
+          "title": "Financiamento de operações",
+          "claim": "Prazo de pagamento de <strong>até 365 dias</strong> contados a partir do desembaraço da mercadoria.",
+          "bullets": [
+            "Linha em USD ou BRL conforme estratégia",
+            "Carência alinhada ao ciclo produtivo do cliente",
+            "Análise de crédito interna e ágil",
+            "Liberação de capital de giro imediato"
+          ],
+          "metric_value": "365d",
+          "metric_label": "prazo máximo de financiamento"
+        },
+        {
+          "num": "04",
+          "title": "Fechamento de câmbio",
+          "claim": "Operação de câmbio <strong>sem taxas</strong> para o cliente Ekoquim, com PTAX competitiva e liquidação D+0.",
+          "bullets": [
+            "Spread reduzido vs. mesa de banco tradicional",
+            "Sem IOF adicional além do legal",
+            "Documentação cambial centralizada pela Ekoquim",
+            "SWIFT enviado no mesmo dia útil"
+          ],
+          "metric_value": "R$ 0",
+          "metric_label": "taxa de fechamento"
+        }
+      ]
+    },
+    {
+      "number": "03",
+      "id": "dados",
+      "title": "Evidência quantitativa",
+      "h2": "Os números por trás da tese Ekoquim.",
+      "exhibits": [
+        {
+          "id": "chartCost",
+          "exhibit": "Exhibit 1",
+          "title": "Decomposição do custo de importação",
+          "subtitle": "Operação tradicional vs. Ekoquim · % do CIF",
+          "type": "horizontal_stacked_bar",
+          "categories": ["Operação tradicional", "Operação Ekoquim"],
+          "series": [
+            { "label": "CIF (preço base)",     "data": [62, 62],   "color": "navy_900" },
+            { "label": "Tributos federais",    "data": [18, 18],   "color": "navy_700" },
+            { "label": "ICMS",                 "data": [12, 8],    "color": "blue_500" },
+            { "label": "Custo cambial",        "data": [5, 1.5],   "color": "gold" },
+            { "label": "Logística e armazém",  "data": [3, 2.5],   "color": "gold_soft" }
+          ],
+          "x_format": "percent",
+          "source": "Fonte: simulação Ekoquim sobre carga química padrão · 2025"
+        },
+        {
+          "id": "chartHedge",
+          "exhibit": "Exhibit 2",
+          "title": "Volatilidade do USD/BRL — exposição protegida",
+          "subtitle": "Cenário sem hedge vs. operação travada via NDF Ekoquim",
+          "type": "line",
+          "labels": ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],
+          "series": [
+            { "label": "Sem hedge (PTAX real)",        "data": [100,102.4,105.8,103.2,108.5,112.7,109.4,115.2,118.9,114.6,117.3,121.5], "color": "blue_500", "fill_gradient": true },
+            { "label": "Com hedge Ekoquim (NDF travado)","data": [100,100,100,100,100,100,100,100,100,100,100,100], "color": "gold", "dashed": true }
+          ],
+          "y_min": 95, "y_max": 125,
+          "source": "Fonte: BCB / PTAX, série diária · base 100 = jan/2025"
+        },
+        {
+          "id": "chartCash",
+          "exhibit": "Exhibit 3",
+          "title": "Capital de giro liberado por extensão de prazo",
+          "subtitle": "Comparativo de pagamento à vista, 180 dias e 365 dias Ekoquim",
+          "type": "grouped_bar",
+          "labels": ["Mês 1","Mês 2","Mês 3","Mês 4","Mês 5","Mês 6","Mês 7","Mês 8","Mês 9","Mês 10","Mês 11","Mês 12"],
+          "series": [
+            { "label": "Pagamento à vista",           "data": [0,80,160,250,340,430,530,630,740,850,970,1100], "color": "navy_900" },
+            { "label": "Financiamento 180 dias",      "data": [500,580,670,760,360,450,540,640,750,860,980,1100], "color": "blue_500" },
+            { "label": "Financiamento Ekoquim 365 dias","data": [950,1040,1130,1230,1320,1410,1510,1610,1710,1810,1900,1100], "color": "gold" }
+          ],
+          "y_format": "USD ($k → $M)",
+          "source": "Fonte: modelagem Ekoquim · operação média de USD 1,0 mi"
+        },
+        {
+          "id": "chartDonut",
+          "exhibit": "Exhibit 4",
+          "title": "Composição da economia total",
+          "subtitle": "Onde nasce o ganho de margem do cliente",
+          "type": "doughnut",
+          "cutout": "62%",
+          "data": [
+            { "label": "Benefício tributário SC", "value": 42, "color": "blue_500" },
+            { "label": "Hedge cambial",          "value": 28, "color": "gold" },
+            { "label": "Câmbio sem taxas",       "value": 12, "color": "navy_700" },
+            { "label": "Capital de giro liberado","value": 18, "color": "gold_soft" }
+          ],
+          "source": "Fonte: análise consolidada Ekoquim · 24 operações"
+        }
+      ],
+      "kpi_banner": [
+        { "value": "−4,0%",  "label": "Custo tributário" },
+        { "value": "+18,7%", "label": "Capital de giro liberado" },
+        { "value": "365",    "label": "Dias de prazo médio" },
+        { "value": "0,0",    "label": "Reais em taxa cambial" }
+      ]
+    },
+    {
+      "number": "04",
+      "id": "metodologia",
+      "title": "Metodologia operacional",
+      "h2": "Como a Ekoquim entrega cada operação, da cotação ao crédito.",
+      "timeline": [
+        { "step": "01", "title": "Diagnóstico financeiro",       "body": "Mapeamos volume, sazonalidade, exposição cambial e estrutura tributária atual do cliente." },
+        { "step": "02", "title": "Estruturação tributária",       "body": "Avaliamos viabilidade da importação por encomenda via Santa Catarina e calculamos o ganho de ICMS." },
+        { "step": "03", "title": "Trava cambial",                 "body": "Contratamos NDF na data do pedido e fixamos a taxa do dólar até o vencimento da operação." },
+        { "step": "04", "title": "Financiamento e desembaraço",   "body": "Liberamos a linha de crédito, executamos o desembaraço e entregamos o material na fábrica." },
+        { "step": "05", "title": "Liquidação e relatório",        "body": "Câmbio fechado sem taxa, relatório consolidado com ganho realizado vs. operação tradicional." }
+      ]
+    },
+    {
+      "number": "05",
+      "id": "contato",
+      "title": "Próximo passo",
+      "h2": "Quer ver o impacto na <em>sua</em> operação?",
+      "body": "Em 30 minutos modelamos o ganho potencial sobre a sua próxima importação, considerando volume, NCM e estrutura societária.",
+      "form": {
+        "fields": [
+          { "name": "nome",     "label": "Nome",                                   "type": "text",   "required": true, "placeholder": "Como devemos te chamar" },
+          { "name": "empresa",  "label": "Empresa",                                "type": "text",   "required": true, "placeholder": "Razão social" },
+          { "name": "email",    "label": "E-mail corporativo",                     "type": "email",  "required": true, "placeholder": "voce@empresa.com.br" },
+          { "name": "volume",   "label": "Volume anual estimado de importação (USD)","type": "select", "required": true,
+            "options": ["Selecione", "Até USD 500 mil", "USD 500 mil — 2 mi", "USD 2 mi — 10 mi", "Acima de USD 10 mi"] }
+        ],
+        "submit_label": "Solicitar diagnóstico Ekoquim",
+        "success_msg": "Recebido. Um especialista Ekoquim entrará em contato em até 1 dia útil."
+      }
+    }
+  ],
+
+  "parallax_band": {
+    "placement": "Between chapter 02 and chapter 03 (full-width navy section).",
+    "background": "Dark forest #0D2818 with radial green/sage gradients and dotted SVG pattern.",
+    "quote_html": "Não vendemos produto financeiro. Estruturamos <em>arquitetura de capital</em> para a indústria química operar com a mesma sofisticação cambial de uma trading global.",
+    "cite": "Time de Estruturação Ekoquim"
+  },
+
+  "footer": {
+    "brand_lede": "Engenharia financeira para a indústria química brasileira.",
+    "columns": [
+      { "title": "Serviços", "items": ["Importação por encomenda", "Hedge cambial", "Financiamento até 365 dias", "Fechamento de câmbio"] },
+      { "title": "Empresa",  "items": ["Sobre", "Insights", "Carreiras", "Contato"] },
+      { "title": "Legal",    "items": ["Termos", "Privacidade", "Compliance"] }
+    ],
+    "base_left":  "© 2026 Ekoquim. Todos os direitos reservados.",
+    "base_right": "Relatório · Volume IV · Maio 2026"
+  },
+
+  "pdf": {
+    "generator": "build_pdf.py",
+    "page_size": "A4",
+    "margins_mm": [22, 18, 20, 18],
+    "footer_left": "Ekoquim Financial Services · Volume IV",
+    "footer_right_pattern": "{page} / {pages}",
+    "first_page_no_footer": true,
+    "total_pages": 12,
+    "size_kb": 260,
+    "structure": [
+      { "page": 1,  "content": "Cover — gradient + 4 stat blocks + brand mark" },
+      { "page": 2,  "content": "Chapter 01 / Sumário Executivo + pull quote callout (two-col)" },
+      { "page": 3,  "content": "Chapter 02 / Pillars 01 (Importação) + 02 (Hedge)" },
+      { "page": 4,  "content": "Chapter 02 / Pillars 03 (Financiamento) + 04 (Câmbio)" },
+      { "page": 5,  "content": "Pull quote (full dark-green page)" },
+      { "page": 6,  "content": "Chapter 03 / Exhibit 1 — cost decomposition" },
+      { "page": 7,  "content": "Exhibit 2 — USD/BRL hedge" },
+      { "page": 8,  "content": "Exhibit 3 — working capital released" },
+      { "page": 9,  "content": "Exhibit 4 — economy donut" },
+      { "page": 10, "content": "KPI banner (large, dark)" },
+      { "page": 11, "content": "Chapter 04 / Methodology timeline (5 steps)" },
+      { "page": 12, "content": "Chapter 05 / CTA dark page (4 next-step items + contact)" }
+    ],
+    "dependencies": ["weasyprint", "matplotlib", "numpy"],
+    "regenerate_command": "python3 build_pdf.py"
+  },
+
+  "known_bugs": [
+    {
+      "severity": "low",
+      "location": "PDF page 4, .pillar-metric strong (R$ 0)",
+      "description": "Currency symbol R$ wraps to a separate line from the digit 0.",
+      "suggested_fix": "Add `white-space: nowrap` rule to .pillar-metric strong in the WeasyPrint CSS."
+    },
+    {
+      "severity": "low",
+      "location": "PDF pages 4 and 10",
+      "description": "Excessive whitespace because page-break-inside: avoid pushed content to new pages.",
+      "suggested_fix": "Reduce pillar card padding or merge KPI banner with Exhibit 4 page; consider increasing density via shorter paragraphs."
+    },
+    {
+      "severity": "medium",
+      "location": "HTML mobile <380px viewport",
+      "description": "Hero stat blocks may feel cramped (2 columns on 720px breakpoint).",
+      "suggested_fix": "Add a 380px breakpoint that switches to 1 column for stats and reduces hero title clamp min."
+    }
+  ],
+
+  "todo": [
+    "Fix the 2 PDF layout bugs above",
+    "Add a 'Cases / Logos de clientes' section between pillars and evidence (chapter '02b / Quem confia')",
+    "Create English variant (index.en.html with simple file-based i18n)",
+    "Replace the inline onsubmit form handler with real integration (Formspree, Netlify Forms or a backend)",
+    "Add Open Graph and Twitter Card meta tags",
+    "Add favicon and PWA manifest",
+    "Run Lighthouse audit — likely improvements needed for LCP due to Google Fonts and Chart.js CDN",
+    "Animate exhibits entrance synced with reveal-on-scroll (delay Chart.js initial draw)",
+    "Add a 'Como medimos' methodology appendix at the end of the PDF explaining each exhibit's calculation"
+  ],
+
+  "reproduction": {
+    "serve_html": "python3 -m http.server 8765",
+    "open_url": "http://localhost:8765/",
+    "regenerate_pdf": "pip install weasyprint matplotlib && python3 build_pdf.py"
+  },
+
+  "git": {
+    "branch": "claude/ekoquim-landing-page-FIjTC",
+    "commits_history": [
+      "Add Ekoquim Financial Services landing page (initial scaffold)",
+      "Improve typography readability across landing page",
+      "Switch to Ekoquim green/gray palette and high-readability fonts",
+      "Add print-ready PDF report with matplotlib exhibits"
+    ],
+    "deliverable_branch_zip_url": "https://github.com/flaviok74/Temp/archive/refs/heads/claude/ekoquim-landing-page-FIjTC.zip"
+  },
+
+  "instructions_to_continuation_agent": [
+    "Confirm understanding of the project before writing code.",
+    "Always preserve the 5-chapter editorial structure (01..05) and the green/gray palette.",
+    "Never use weights below 500 for body text — Manrope at 400 looks too thin in this layout.",
+    "When adding new copy, keep the McKinsey editorial tone: short claims, specific numbers, sober language.",
+    "Pillar metrics must remain readable as a single line — apply white-space: nowrap when they contain currency or signs.",
+    "Charts should always use the ekoquim green ramp; never introduce reds, oranges or true blues.",
+    "Any new section must be present both in index.html (interactive) and build_pdf.py (printed) for parity.",
+    "Ask which task to prioritize from the todo list before implementing."
+  ]
+}
