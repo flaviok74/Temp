@@ -1,0 +1,5 @@
+# Playwright MCP runtime artifacts (page snapshots, console logs)
+.playwright-mcp/
+
+# Screenshots captured during sessions
+*.png
