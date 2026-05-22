@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Calculadora de Déficit Calórico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Copernicus:wght@400;500;600;700&family=Styrene+A:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --claude-cream: #F5F0E8;
+    --claude-bg: #FAF9F5;
+    --claude-card: #FFFFFF;
+    --claude-orange: #D97757;
+    --claude-orange-dark: #B85F44;
+    --claude-orange-light: #E89B82;
+    --claude-text: #2B1810;
+    --claude-text-soft: #6B5C52;
+    --claude-border: #E8DFD3;
+    --claude-accent: #F5E6DC;
+    --shadow-sm: 0 1px 2px rgba(43, 24, 16, 0.06);
+    --shadow-md: 0 4px 12px rgba(43, 24, 16, 0.08);
+    --shadow-lg: 0 8px 24px rgba(43, 24, 16, 0.1);
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--claude-bg);
+    color: var(--claude-text);
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  header {
+    text-align: center;
+    padding: 40px 20px 32px;
+    background: linear-gradient(135deg, var(--claude-accent) 0%, var(--claude-cream) 100%);
+    border-radius: 24px;
+    margin-bottom: 28px;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, var(--claude-orange-light) 0%, transparent 70%);
+    opacity: 0.3;
+    border-radius: 50%;
+  }
+
+  header h1 {
+    font-family: 'Source Serif 4', 'Copernicus', Georgia, serif;
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    font-weight: 600;
+    color: var(--claude-text);
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+    position: relative;
+  }
+
+  header p {
+    color: var(--claude-text-soft);
+    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .card {
+    background: var(--claude-card);
+    border-radius: 20px;
+    padding: 32px;
+    margin-bottom: 24px;
+    border: 1px solid var(--claude-border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .step-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--claude-orange);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    letter-spacing: 0.02em;
+  }
+
+  .step-badge .num {
+    background: rgba(255, 255, 255, 0.25);
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+  }
+
+  h2 {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: clamp(1.3rem, 3vw, 1.65rem);
+    color: var(--claude-text);
+    margin-bottom: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  h3 {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 1.15rem;
+    color: var(--claude-text);
+    margin: 20px 0 12px;
+    font-weight: 600;
+  }
+
+  p, li {
+    color: var(--claude-text-soft);
+    font-size: 1rem;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  label {
+    font-size: 0.9rem;
+    color: var(--claude-text);
+    font-weight: 500;
+  }
+
+  input, select {
+    font-family: inherit;
+    font-size: 1rem;
+    padding: 12px 14px;
+    border: 1.5px solid var(--claude-border);
+    border-radius: 12px;
+    background: var(--claude-bg);
+    color: var(--claude-text);
+    transition: all 0.2s ease;
+    width: 100%;
+  }
+
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--claude-orange);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.15);
+  }
+
+  .gender-toggle {
+    display: flex;
+    gap: 8px;
+    background: var(--claude-bg);
+    padding: 4px;
+    border-radius: 12px;
+    border: 1.5px solid var(--claude-border);
+  }
+
+  .gender-toggle input { display: none; }
+
+  .gender-toggle label {
+    flex: 1;
+    text-align: center;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    color: var(--claude-text-soft);
+  }
+
+  .gender-toggle input:checked + label {
+    background: var(--claude-orange);
+    color: white;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .calc-btn {
+    background: var(--claude-orange);
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .calc-btn:hover {
+    background: var(--claude-orange-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .calc-btn:active {
+    transform: translateY(0);
+  }
+
+  .results {
+    margin-top: 24px;
+    padding: 24px;
+    background: linear-gradient(135deg, var(--claude-accent) 0%, var(--claude-cream) 100%);
+    border-radius: 16px;
+    border: 1px solid var(--claude-border);
+    display: none;
+  }
+
+  .results.visible { display: block; }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .result-item {
+    background: white;
+    padding: 18px;
+    border-radius: 12px;
+    border: 1px solid var(--claude-border);
+  }
+
+  .result-item .label {
+    font-size: 0.85rem;
+    color: var(--claude-text-soft);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .result-item .value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--claude-orange-dark);
+    font-family: 'Source Serif 4', Georgia, serif;
+  }
+
+  .result-item .unit {
+    font-size: 0.9rem;
+    color: var(--claude-text-soft);
+    margin-left: 4px;
+  }
+
+  .result-item.highlight {
+    background: var(--claude-orange);
+    border-color: var(--claude-orange-dark);
+  }
+
+  .result-item.highlight .label,
+  .result-item.highlight .value,
+  .result-item.highlight .unit {
+    color: white;
+  }
+
+  .formula-box {
+    background: var(--claude-bg);
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin: 12px 0;
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 0.95rem;
+    color: var(--claude-text);
+    border-left: 3px solid var(--claude-orange);
+  }
+
+  .formula-box strong { color: var(--claude-orange-dark); }
+
+  .activity-list {
+    list-style: none;
+    margin-top: 12px;
+  }
+
+  .activity-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--claude-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .activity-list li:last-child { border-bottom: none; }
+
+  .activity-list .multiplier {
+    background: var(--claude-accent);
+    color: var(--claude-orange-dark);
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .pillar {
+    background: var(--claude-bg);
+    padding: 20px;
+    border-radius: 14px;
+    border: 1px solid var(--claude-border);
+    transition: transform 0.2s ease;
+  }
+
+  .pillar:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .pillar .icon {
+    width: 40px;
+    height: 40px;
+    background: var(--claude-orange);
+    color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+  }
+
+  .pillar h4 {
+    font-family: 'Source Serif 4', Georgia, serif;
+    color: var(--claude-text);
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .pillar p {
+    font-size: 0.95rem;
+    color: var(--claude-text-soft);
+  }
+
+  .macro-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--claude-border);
+  }
+
+  .macro-table th,
+  .macro-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--claude-border);
+  }
+
+  .macro-table th {
+    background: var(--claude-accent);
+    color: var(--claude-text);
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .macro-table td { color: var(--claude-text-soft); }
+  .macro-table tr:last-child td { border-bottom: none; }
+
+  .print-btn-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 100;
+  }
+
+  .print-btn {
+    background: var(--claude-orange);
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s ease;
+  }
+
+  .print-btn:hover {
+    background: var(--claude-orange-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(43, 24, 16, 0.18);
+  }
+
+  .print-btn svg { width: 20px; height: 20px; }
+
+  footer {
+    text-align: center;
+    padding: 24px 20px;
+    color: var(--claude-text-soft);
+    font-size: 0.85rem;
+  }
+
+  .disclaimer {
+    background: var(--claude-accent);
+    border-left: 4px solid var(--claude-orange);
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-top: 16px;
+    font-size: 0.9rem;
+    color: var(--claude-text);
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 12px; }
+    .card { padding: 22px 18px; }
+    header { padding: 32px 16px 24px; border-radius: 18px; }
+    .print-btn-container { bottom: 16px; right: 16px; }
+    .print-btn { padding: 12px 18px; font-size: 0.9rem; }
+    .print-btn .text { display: none; }
+    .print-btn svg { width: 22px; height: 22px; }
+  }
+
+  @media print {
+    body {
+      padding: 0;
+      background: white;
+      font-size: 11pt;
+    }
+    .container { max-width: 100%; }
+    .print-btn-container { display: none; }
+    .card {
+      box-shadow: none;
+      border: 1px solid #ddd;
+      page-break-inside: avoid;
+      margin-bottom: 16px;
+      padding: 20px;
+    }
+    header {
+      box-shadow: none;
+      background: var(--claude-accent);
+      padding: 24px;
+    }
+    header::before { display: none; }
+    .pillar:hover { transform: none; }
+    .results { display: block !important; }
+    h1, h2 { color: #2B1810; }
+    a { color: #B85F44; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <h1>Calculadora de Déficit Calórico</h1>
+    <p>Calcule suas calorias diárias para perder até 1 kg por semana de forma saudável, mantendo a massa muscular.</p>
+  </header>
+
+  <section class="card">
+    <span class="step-badge"><span class="num">1</span> Passo 1</span>
+    <h2>Taxa Metabólica Basal (TMB)</h2>
+    <p>Descubra quantas calorias seu corpo gasta em repouso. Preencha os campos abaixo:</p>
+
+    <form id="tmbForm" onsubmit="event.preventDefault(); calcular();">
+      <div class="form-grid">
+        <div class="field">
+          <label>Sexo</label>
+          <div class="gender-toggle">
+            <input type="radio" id="male" name="gender" value="male" checked />
+            <label for="male">Homem</label>
+            <input type="radio" id="female" name="gender" value="female" />
+            <label for="female">Mulher</label>
+          </div>
+        </div>
+        <div class="field">
+          <label for="weight">Peso (kg)</label>
+          <input type="number" id="weight" min="30" max="300" step="0.1" placeholder="Ex: 70" required />
+        </div>
+        <div class="field">
+          <label for="height">Altura (cm)</label>
+          <input type="number" id="height" min="100" max="250" placeholder="Ex: 175" required />
+        </div>
+        <div class="field">
+          <label for="age">Idade (anos)</label>
+          <input type="number" id="age" min="10" max="120" placeholder="Ex: 30" required />
+        </div>
+        <div class="field" style="grid-column: 1 / -1;">
+          <label for="activity">Nível de atividade física</label>
+          <select id="activity" required>
+            <option value="1.2">Sedentário (pouco ou nenhum exercício) — ×1,2</option>
+            <option value="1.55" selected>Atividade Leve (treino 1 a 3x por semana) — ×1,55</option>
+            <option value="1.725">Atividade Intensa (treino pesado e frequente) — ×1,725</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="calc-btn">
+        Calcular meu déficit
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </form>
+
+    <div id="results" class="results">
+      <h3 style="margin-top: 0;">Seus resultados</h3>
+      <div class="results-grid">
+        <div class="result-item">
+          <span class="label">TMB (Taxa Metabólica Basal)</span>
+          <span class="value" id="tmbValue">0</span><span class="unit">kcal/dia</span>
+        </div>
+        <div class="result-item">
+          <span class="label">Manutenção</span>
+          <span class="value" id="maintenanceValue">0</span><span class="unit">kcal/dia</span>
+        </div>
+        <div class="result-item highlight">
+          <span class="label">Déficit para emagrecer</span>
+          <span class="value" id="deficitValue">0</span><span class="unit">kcal/dia</span>
+        </div>
+      </div>
+      <div id="macrosBox" style="margin-top: 20px;">
+        <h3>Suas metas de macronutrientes</h3>
+        <table class="macro-table">
+          <thead>
+            <tr><th>Macronutriente</th><th>Por kg</th><th>Total/dia</th><th>Calorias</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Proteína</td><td>1,6 g</td><td id="proteinG">—</td><td id="proteinKcal">—</td></tr>
+            <tr><td>Gordura</td><td>0,5 g</td><td id="fatG">—</td><td id="fatKcal">—</td></tr>
+            <tr><td>Carboidrato</td><td>3–5 g</td><td id="carbG">—</td><td id="carbKcal">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <span class="step-badge"><span class="num">2</span> Passo 2</span>
+    <h2>Fórmulas utilizadas</h2>
+    <p>O cálculo da TMB é feito com base em sexo, peso (kg), altura (cm) e idade:</p>
+    <div class="formula-box">
+      <strong>Homens:</strong> 66,47 + (13,75 × peso) + (5 × altura) − (6,75 × idade)
+    </div>
+    <div class="formula-box">
+      <strong>Mulheres:</strong> 655,1 + (9,56 × peso) + (1,85 × altura) − (4,68 × idade)
+    </div>
+
+    <h3>Coeficiente de Atividade Física</h3>
+    <p>Multiplique a TMB pelo seu nível de atividade para obter as calorias de manutenção:</p>
+    <ul class="activity-list">
+      <li><span>Sedentário</span> <span class="multiplier">×1,2</span></li>
+      <li><span>Atividade Leve (treino 1 a 3x/semana)</span> <span class="multiplier">×1,55</span></li>
+      <li><span>Atividade Intensa (treino pesado e frequente)</span> <span class="multiplier">×1,725</span></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <span class="step-badge"><span class="num">3</span> Passo 3</span>
+    <h2>Criar o Déficit Calórico</h2>
+    <p>Subtraia <strong>500 calorias</strong> do valor de manutenção. Esse novo valor será a sua meta diária para perder aproximadamente <strong>1 kg por semana</strong> de forma saudável.</p>
+    <div class="formula-box">
+      <strong>Déficit diário:</strong> Calorias de manutenção − 500 kcal
+    </div>
+  </section>
+
+  <section class="card">
+    <span class="step-badge"><span class="num">4</span> Passo 4</span>
+    <h2>Pilares para o Sucesso e Consistência</h2>
+    <p>Para preservar a massa muscular e manter resultados a longo prazo:</p>
+
+    <div class="pillars-grid">
+      <div class="pillar">
+        <div class="icon">🏋️</div>
+        <h4>Treino</h4>
+        <p>Atividade física de 4 a 5 vezes por semana, com intensidade — nada de "treinar fofo".</p>
+      </div>
+      <div class="pillar">
+        <div class="icon">🏃</div>
+        <h4>Cardio</h4>
+        <p>30 minutos diários de exercício aeróbico em intensidade moderada.</p>
+      </div>
+      <div class="pillar">
+        <div class="icon">😴</div>
+        <h4>Sono</h4>
+        <p>Dormir 8 horas por noite ajuda no controle dos hormônios da fome.</p>
+      </div>
+      <div class="pillar">
+        <div class="icon">🥬</div>
+        <h4>Fibras e Saciedade</h4>
+        <p>Consumir de 300 g a 500 g de legumes e vegetais diariamente para evitar compulsão.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top: 28px;">Macronutrientes por quilo de peso corporal</h3>
+    <table class="macro-table">
+      <thead>
+        <tr>
+          <th>Macronutriente</th>
+          <th>Quantidade por kg</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Proteína</td><td>1,6 g por kg</td></tr>
+        <tr><td>Gordura</td><td>0,5 g por kg</td></tr>
+        <tr><td>Carboidrato</td><td>3 g a 5 g por kg</td></tr>
+      </tbody>
+    </table>
+
+    <div class="disclaimer">
+      ⚠️ <strong>Importante:</strong> Esta calculadora é apenas para fins informativos. Consulte sempre um nutricionista ou médico antes de iniciar qualquer plano alimentar ou programa de treinos.
+    </div>
+  </section>
+
+  <footer>
+    Feito com cuidado · Cálculo baseado em fórmulas validadas de TMB.
+  </footer>
+
+</div>
+
+<div class="print-btn-container">
+  <button class="print-btn" onclick="window.print()" aria-label="Imprimir como PDF">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 6 2 18 2 18 9"/>
+      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+      <rect x="6" y="14" width="12" height="8"/>
+    </svg>
+    <span class="text">Salvar em PDF</span>
+  </button>
+</div>
+
+<script>
+  function calcular() {
+    const gender = document.querySelector('input[name="gender"]:checked').value;
+    const weight = parseFloat(document.getElementById('weight').value);
+    const height = parseFloat(document.getElementById('height').value);
+    const age = parseInt(document.getElementById('age').value, 10);
+    const activity = parseFloat(document.getElementById('activity').value);
+
+    if (!weight || !height || !age) return;
+
+    let tmb;
+    if (gender === 'male') {
+      tmb = 66.47 + (13.75 * weight) + (5 * height) - (6.75 * age);
+    } else {
+      tmb = 655.1 + (9.56 * weight) + (1.85 * height) - (4.68 * age);
+    }
+
+    const maintenance = tmb * activity;
+    const deficit = maintenance - 500;
+
+    document.getElementById('tmbValue').textContent = Math.round(tmb).toLocaleString('pt-BR');
+    document.getElementById('maintenanceValue').textContent = Math.round(maintenance).toLocaleString('pt-BR');
+    document.getElementById('deficitValue').textContent = Math.round(deficit).toLocaleString('pt-BR');
+
+    const proteinG = weight * 1.6;
+    const fatG = weight * 0.5;
+    const carbGMin = weight * 3;
+    const carbGMax = weight * 5;
+
+    document.getElementById('proteinG').textContent = `${proteinG.toFixed(1)} g`;
+    document.getElementById('proteinKcal').textContent = `${Math.round(proteinG * 4)} kcal`;
+    document.getElementById('fatG').textContent = `${fatG.toFixed(1)} g`;
+    document.getElementById('fatKcal').textContent = `${Math.round(fatG * 9)} kcal`;
+    document.getElementById('carbG').textContent = `${carbGMin.toFixed(0)}–${carbGMax.toFixed(0)} g`;
+    document.getElementById('carbKcal').textContent = `${Math.round(carbGMin * 4)}–${Math.round(carbGMax * 4)} kcal`;
+
+    const results = document.getElementById('results');
+    results.classList.add('visible');
+    results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+</script>
+
+</body>
+</html>
