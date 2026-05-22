@@ -3,238 +3,276 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Calculadora de Déficit Calórico</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<title>Déficit Calórico — Calculadora</title>
 <style>
   :root {
-    --blue-50:  #EFF6FF;
-    --blue-100: #DBEAFE;
-    --blue-200: #BFDBFE;
-    --blue-300: #93C5FD;
-    --blue-400: #60A5FA;
-    --blue-500: #3B82F6;
-    --blue-600: #2563EB;
-    --blue-700: #1D4ED8;
-    --blue-800: #1E40AF;
-    --blue-900: #1E3A8A;
-    --ink:      #0F172A;
-    --ink-soft: #475569;
-    --ink-mute: #64748B;
-    --glass-bg:     rgba(255, 255, 255, 0.55);
-    --glass-bg-strong: rgba(255, 255, 255, 0.72);
-    --glass-border: rgba(255, 255, 255, 0.45);
-    --glass-shadow: 0 8px 32px rgba(30, 64, 175, 0.12);
-    --glass-shadow-lg: 0 20px 50px rgba(30, 64, 175, 0.18);
+    --apple-black:   #1D1D1F;
+    --apple-grey-1:  #F5F5F7;
+    --apple-grey-2:  #E8E8ED;
+    --apple-grey-3:  #86868B;
+    --apple-grey-4:  #6E6E73;
+    --apple-blue:    #0071E3;
+    --apple-blue-h:  #0077ED;
+    --apple-link:    #06C;
+    --apple-red:     #BF4800;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
 
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    color: var(--ink);
-    line-height: 1.6;
-    min-height: 100vh;
-    padding: 20px;
-    background:
-      radial-gradient(at 15% 10%, var(--blue-300) 0%, transparent 45%),
-      radial-gradient(at 85% 20%, var(--blue-400) 0%, transparent 40%),
-      radial-gradient(at 70% 90%, var(--blue-500) 0%, transparent 45%),
-      radial-gradient(at 10% 80%, var(--blue-200) 0%, transparent 40%),
-      linear-gradient(135deg, var(--blue-50) 0%, #E0E7FF 100%);
-    background-attachment: fixed;
-    position: relative;
-    overflow-x: hidden;
+    font-family: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont,
+                 "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background: #FFFFFF;
+    color: var(--apple-black);
+    line-height: 1.47059;
+    font-weight: 400;
+    letter-spacing: -0.022em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 60%),
-      radial-gradient(circle at 80% 70%, rgba(255,255,255,0.3) 0%, transparent 60%);
-    pointer-events: none;
-    z-index: 0;
+  /* ---------- Nav (slim Apple-style) ---------- */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--apple-grey-2);
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 22px;
+    font-size: 14px;
   }
+
+  nav .brand {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--apple-black);
+  }
+
+  nav .links {
+    display: flex;
+    gap: 24px;
+  }
+
+  nav .links a {
+    color: var(--apple-black);
+    opacity: 0.88;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+    font-size: 12px;
+  }
+
+  nav .links a:hover { opacity: 1; }
+
+  /* ---------- Sections ---------- */
+  section {
+    padding: 90px 22px;
+    text-align: center;
+  }
+
+  section.dark {
+    background: var(--apple-black);
+    color: #F5F5F7;
+  }
+
+  section.grey { background: var(--apple-grey-1); }
 
   .container {
     max-width: 980px;
     margin: 0 auto;
-    position: relative;
-    z-index: 1;
   }
 
-  /* ---------- Glass cards ---------- */
-  .glass {
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
-    border-radius: 24px;
+  .container.wide { max-width: 1200px; }
+
+  /* ---------- Typography ---------- */
+  .eyebrow {
+    font-size: 21px;
+    line-height: 1.19;
+    font-weight: 400;
+    letter-spacing: 0.011em;
+    color: var(--apple-grey-4);
+    margin-bottom: 4px;
   }
 
-  header {
-    text-align: center;
-    padding: 48px 24px 36px;
-    margin-bottom: 28px;
-    position: relative;
-    overflow: hidden;
-  }
+  section.dark .eyebrow { color: #A1A1A6; }
 
-  header::after {
-    content: '';
-    position: absolute;
-    top: -30%;
-    right: -10%;
-    width: 320px;
-    height: 320px;
-    background: radial-gradient(circle, var(--blue-400) 0%, transparent 70%);
-    opacity: 0.35;
-    border-radius: 50%;
-    filter: blur(40px);
-    animation: float 9s ease-in-out infinite;
-  }
-
-  header::before {
-    content: '';
-    position: absolute;
-    bottom: -40%;
-    left: -10%;
-    width: 280px;
-    height: 280px;
-    background: radial-gradient(circle, var(--blue-300) 0%, transparent 70%);
-    opacity: 0.4;
-    border-radius: 50%;
-    filter: blur(40px);
-    animation: float 11s ease-in-out -3s infinite;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translate(0, 0); }
-    50%      { transform: translate(20px, -20px); }
-  }
-
-  header h1 {
-    font-family: 'Source Serif 4', Georgia, serif;
-    font-size: clamp(1.9rem, 5vw, 2.8rem);
+  h1 {
+    font-size: clamp(40px, 7vw, 80px);
+    line-height: 1.05;
     font-weight: 600;
-    color: var(--blue-900);
-    margin-bottom: 14px;
-    letter-spacing: -0.02em;
-    position: relative;
-    z-index: 1;
-  }
-
-  header p {
-    color: var(--ink-soft);
-    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
-    max-width: 620px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-  }
-
-  .card {
-    padding: 32px;
-    margin-bottom: 24px;
-  }
-
-  /* ---------- Step badge ---------- */
-  .step-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: linear-gradient(135deg, var(--blue-600), var(--blue-500));
-    color: white;
-    padding: 6px 16px;
-    border-radius: 999px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-bottom: 16px;
-    letter-spacing: 0.02em;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
-  }
-
-  .step-badge .num {
-    background: rgba(255, 255, 255, 0.28);
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
+    letter-spacing: -0.015em;
+    margin-bottom: 12px;
   }
 
   h2 {
-    font-family: 'Source Serif 4', Georgia, serif;
-    font-size: clamp(1.35rem, 3vw, 1.7rem);
-    color: var(--blue-900);
-    margin-bottom: 16px;
+    font-size: clamp(32px, 5vw, 56px);
+    line-height: 1.07143;
     font-weight: 600;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.005em;
+    margin-bottom: 16px;
   }
 
   h3 {
-    font-family: 'Source Serif 4', Georgia, serif;
-    font-size: 1.15rem;
-    color: var(--blue-800);
-    margin: 22px 0 12px;
+    font-size: clamp(24px, 3vw, 32px);
+    line-height: 1.125;
     font-weight: 600;
+    letter-spacing: 0.004em;
+    margin: 24px 0 12px;
   }
 
-  p, li { color: var(--ink-soft); font-size: 1rem; }
+  h4 {
+    font-size: 21px;
+    line-height: 1.19;
+    font-weight: 600;
+    letter-spacing: 0.011em;
+    margin-bottom: 8px;
+  }
 
-  /* ---------- Form ---------- */
+  .subhead {
+    font-size: clamp(19px, 2.2vw, 24px);
+    line-height: 1.33;
+    font-weight: 400;
+    letter-spacing: 0.009em;
+    color: var(--apple-grey-4);
+    max-width: 720px;
+    margin: 0 auto 32px;
+  }
+
+  section.dark .subhead { color: #A1A1A6; }
+
+  p { font-size: 17px; line-height: 1.47; }
+
+  /* ---------- Buttons (Apple pill) ---------- */
+  .btn-row {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 17px;
+    line-height: 1.176;
+    font-weight: 400;
+    letter-spacing: -0.022em;
+    padding: 12px 22px;
+    border-radius: 980px;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    transition: all 0.2s cubic-bezier(.4, 0, .6, 1);
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: var(--apple-blue);
+    color: #FFFFFF;
+  }
+
+  .btn-primary:hover { background: var(--apple-blue-h); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--apple-blue);
+    border: 1px solid var(--apple-blue);
+  }
+
+  .btn-secondary:hover {
+    background: var(--apple-blue);
+    color: #FFFFFF;
+  }
+
+  .btn-link {
+    color: var(--apple-link);
+    font-size: 17px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    transition: color 0.2s ease;
+  }
+
+  .btn-link:hover { color: var(--apple-blue-h); text-decoration: underline; }
+
+  .btn-link .chev {
+    font-size: 14px;
+    transition: transform 0.2s ease;
+  }
+
+  .btn-link:hover .chev { transform: translateX(3px); }
+
+  /* ---------- Form (clean Apple inputs) ---------- */
+  .form-card {
+    background: #FFFFFF;
+    border-radius: 22px;
+    padding: 48px;
+    margin: 48px auto 0;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    text-align: left;
+    max-width: 720px;
+  }
+
   .form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    margin: 20px 0;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin: 24px 0 28px;
   }
 
-  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field { display: flex; flex-direction: column; gap: 8px; }
 
   label {
-    font-size: 0.9rem;
-    color: var(--blue-900);
+    font-size: 14px;
     font-weight: 500;
+    color: var(--apple-grey-4);
+    letter-spacing: -0.016em;
   }
 
   input, select {
     font-family: inherit;
-    font-size: 1rem;
+    font-size: 17px;
     padding: 12px 14px;
-    border: 1.5px solid rgba(147, 197, 253, 0.6);
+    border: 1px solid var(--apple-grey-2);
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    color: var(--ink);
-    transition: all 0.25s ease;
+    background: #FFFFFF;
+    color: var(--apple-black);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
     width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  select {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='%23999' d='M6 8L0 0h12z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
   }
 
   input:focus, select:focus {
     outline: none;
-    border-color: var(--blue-500);
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
-    transform: translateY(-1px);
+    border-color: var(--apple-blue);
+    box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
   }
 
   .gender-toggle {
     display: flex;
-    gap: 6px;
-    background: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(10px);
-    padding: 4px;
+    gap: 0;
+    border: 1px solid var(--apple-grey-2);
     border-radius: 12px;
-    border: 1.5px solid rgba(147, 197, 253, 0.6);
+    overflow: hidden;
+    background: #FFFFFF;
   }
 
   .gender-toggle input { display: none; }
@@ -242,511 +280,494 @@
   .gender-toggle label {
     flex: 1;
     text-align: center;
-    padding: 10px 12px;
-    border-radius: 8px;
+    padding: 12px 14px;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: all 0.15s ease;
     font-weight: 500;
-    color: var(--ink-soft);
+    color: var(--apple-grey-4);
+    font-size: 15px;
   }
 
   .gender-toggle input:checked + label {
-    background: linear-gradient(135deg, var(--blue-600), var(--blue-500));
-    color: white;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-    transform: translateY(-1px);
+    background: var(--apple-blue);
+    color: #FFFFFF;
   }
-
-  /* ---------- Animated buttons ---------- */
-  .calc-btn, .print-btn {
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-    background: linear-gradient(135deg, var(--blue-600), var(--blue-500));
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    font-family: inherit;
-    cursor: pointer;
-    transition: transform 0.25s cubic-bezier(.2,.8,.2,1), box-shadow 0.25s ease;
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35), inset 0 1px 0 rgba(255,255,255,0.3);
-  }
-
-  .calc-btn {
-    padding: 14px 32px;
-    font-size: 1.05rem;
-    font-weight: 600;
-    border-radius: 14px;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .calc-btn::before, .print-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.45) 50%, transparent 70%);
-    transform: translateX(-120%);
-    transition: transform 0.7s ease;
-    z-index: -1;
-  }
-
-  .calc-btn:hover::before, .print-btn:hover::before { transform: translateX(120%); }
-
-  .calc-btn:hover, .print-btn:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 14px 32px rgba(37, 99, 235, 0.5), inset 0 1px 0 rgba(255,255,255,0.3);
-  }
-
-  .calc-btn:active, .print-btn:active {
-    transform: translateY(-1px) scale(0.99);
-    transition: transform 0.1s;
-  }
-
-  .calc-btn .arrow { transition: transform 0.3s cubic-bezier(.2,.8,.2,1); }
-  .calc-btn:hover .arrow { transform: translateX(6px); }
-
-  /* ---------- Pulsing glow on calc button ---------- */
-  .calc-btn {
-    animation: pulse-glow 2.6s ease-in-out infinite;
-  }
-  @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35), inset 0 1px 0 rgba(255,255,255,0.3); }
-    50%      { box-shadow: 0 6px 28px rgba(59, 130, 246, 0.6), inset 0 1px 0 rgba(255,255,255,0.3); }
-  }
-  .calc-btn:hover { animation: none; }
 
   /* ---------- Results ---------- */
   .results {
-    margin-top: 24px;
-    padding: 24px;
-    background: linear-gradient(135deg, rgba(219, 234, 254, 0.7), rgba(191, 219, 254, 0.5));
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 18px;
+    margin-top: 40px;
     display: none;
-    animation: fade-in 0.5s ease-out;
   }
 
-  @keyframes fade-in {
-    from { opacity: 0; transform: translateY(12px); }
+  .results.visible {
+    display: block;
+    animation: fadeUp 0.6s cubic-bezier(.2, .8, .2, 1);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  .results.visible { display: block; }
-
   .results-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 16px;
-    margin-top: 16px;
+    margin: 24px 0;
   }
 
-  .result-item {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(12px);
-    padding: 18px;
-    border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    transition: transform 0.3s ease;
+  .result-card {
+    background: var(--apple-grey-1);
+    padding: 28px 24px;
+    border-radius: 18px;
+    text-align: center;
+    transition: transform 0.3s cubic-bezier(.2, .8, .2, 1);
   }
 
-  .result-item:hover { transform: translateY(-3px); }
+  .result-card:hover { transform: translateY(-2px); }
 
-  .result-item .label {
-    font-size: 0.85rem;
-    color: var(--ink-soft);
-    margin-bottom: 6px;
+  .result-card .label {
+    font-size: 14px;
+    color: var(--apple-grey-4);
+    margin-bottom: 8px;
+    display: block;
+    font-weight: 500;
+  }
+
+  .result-card .value {
+    font-size: 44px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.015em;
+    color: var(--apple-black);
+  }
+
+  .result-card .unit {
+    font-size: 14px;
+    color: var(--apple-grey-4);
+    margin-top: 6px;
     display: block;
   }
 
-  .result-item .value {
-    font-size: 1.7rem;
-    font-weight: 700;
-    color: var(--blue-700);
-    font-family: 'Source Serif 4', Georgia, serif;
+  .result-card.feature {
+    background: var(--apple-black);
+    color: #FFFFFF;
   }
 
-  .result-item .unit {
-    font-size: 0.9rem;
-    color: var(--ink-mute);
-    margin-left: 4px;
-  }
+  .result-card.feature .label,
+  .result-card.feature .unit { color: #A1A1A6; }
 
-  .result-item.highlight {
-    background: linear-gradient(135deg, var(--blue-600), var(--blue-700));
-    border-color: rgba(255, 255, 255, 0.3);
-    box-shadow: 0 10px 26px rgba(37, 99, 235, 0.35);
-  }
+  .result-card.feature .value { color: #FFFFFF; }
 
-  .result-item.highlight .label,
-  .result-item.highlight .value,
-  .result-item.highlight .unit { color: white; }
-
-  /* ---------- Tip boxes ---------- */
+  /* ---------- Tip blocks ---------- */
   .tip {
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-left: 4px solid var(--blue-500);
-    border-radius: 12px;
-    padding: 14px 18px;
-    margin: 14px 0;
-    font-size: 0.95rem;
-    color: var(--ink);
-    border-top: 1px solid rgba(255,255,255,0.5);
-    border-right: 1px solid rgba(255,255,255,0.5);
-    border-bottom: 1px solid rgba(255,255,255,0.5);
+    background: var(--apple-grey-1);
+    border-radius: 18px;
+    padding: 24px 28px;
+    margin: 20px 0;
+    text-align: left;
   }
 
-  .tip strong { color: var(--blue-700); }
-
-  .tip-title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  .tip-label {
+    display: inline-block;
+    font-size: 12px;
     font-weight: 600;
-    color: var(--blue-800);
-    margin-bottom: 6px;
-  }
-
-  .tip-title .badge {
-    background: var(--blue-100);
-    color: var(--blue-800);
-    padding: 2px 10px;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
+    color: var(--apple-blue);
+    margin-bottom: 8px;
   }
 
-  .formula-box {
-    background: rgba(255, 255, 255, 0.55);
-    backdrop-filter: blur(12px);
-    padding: 16px 20px;
-    border-radius: 12px;
-    margin: 12px 0;
-    font-family: 'Source Serif 4', Georgia, serif;
-    font-size: 0.95rem;
-    color: var(--ink);
-    border-left: 3px solid var(--blue-500);
-    border-top: 1px solid rgba(255,255,255,0.5);
+  .tip h4 {
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+    color: var(--apple-black);
   }
 
-  .formula-box strong { color: var(--blue-700); }
+  .tip p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--apple-grey-4);
+  }
+
+  .tip strong { color: var(--apple-black); font-weight: 600; }
+
+  /* ---------- Formula display ---------- */
+  .formula-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+    margin-top: 32px;
+  }
+
+  .formula-card {
+    background: #FFFFFF;
+    border: 1px solid var(--apple-grey-2);
+    border-radius: 18px;
+    padding: 28px;
+    text-align: left;
+  }
+
+  .formula-card .tag {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--apple-blue);
+    margin-bottom: 12px;
+  }
+
+  .formula-card .formula {
+    font-family: "SF Mono", Menlo, Monaco, Consolas, monospace;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--apple-black);
+    word-break: break-word;
+  }
+
+  section.dark .formula-card {
+    background: #2D2D2F;
+    border-color: #424245;
+  }
+
+  section.dark .formula-card .formula { color: #F5F5F7; }
 
   /* ---------- Activity list ---------- */
-  .activity-list { list-style: none; margin-top: 12px; }
+  .activity-list {
+    max-width: 640px;
+    margin: 32px auto 0;
+    list-style: none;
+  }
 
   .activity-list li {
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(147, 197, 253, 0.4);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--apple-grey-2);
+    font-size: 17px;
   }
+
+  section.dark .activity-list li { border-color: #424245; }
   .activity-list li:last-child { border-bottom: none; }
 
-  .activity-list .multiplier {
-    background: var(--blue-100);
-    color: var(--blue-800);
-    padding: 4px 12px;
-    border-radius: 999px;
+  .multiplier {
     font-weight: 600;
-    font-size: 0.9rem;
+    color: var(--apple-blue);
+    font-size: 17px;
   }
 
-  /* ---------- Pillars ---------- */
-  .pillars-grid {
+  section.dark .multiplier { color: #2997FF; }
+
+  /* ---------- Pillars (4-up grid) ---------- */
+  .pillars {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 16px;
-    margin-top: 20px;
+    margin-top: 48px;
   }
 
   .pillar {
-    background: rgba(255, 255, 255, 0.55);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    padding: 22px;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    transition: transform 0.3s cubic-bezier(.2,.8,.2,1), box-shadow 0.3s ease;
+    background: #FFFFFF;
+    border-radius: 22px;
+    padding: 36px 28px;
+    text-align: left;
+    transition: transform 0.4s cubic-bezier(.2, .8, .2, 1);
   }
 
-  .pillar:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 14px 32px rgba(30, 64, 175, 0.15);
-  }
+  .pillar:hover { transform: translateY(-4px); }
 
   .pillar .icon {
-    width: 44px;
-    height: 44px;
-    background: linear-gradient(135deg, var(--blue-500), var(--blue-700));
-    color: white;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.3rem;
-    margin-bottom: 12px;
-    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+    font-size: 40px;
+    margin-bottom: 18px;
+    display: block;
   }
 
   .pillar h4 {
-    font-family: 'Source Serif 4', Georgia, serif;
-    color: var(--blue-900);
-    font-size: 1.1rem;
-    margin-bottom: 8px;
+    font-size: 22px;
     font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+    color: var(--apple-black);
   }
 
-  .pillar p { font-size: 0.95rem; color: var(--ink-soft); }
+  .pillar p { font-size: 15px; color: var(--apple-grey-4); line-height: 1.5; }
 
-  /* ---------- Tables ---------- */
+  /* ---------- Macro table ---------- */
   .macro-table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin-top: 16px;
-    border-radius: 14px;
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    background: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(12px);
+    border-collapse: collapse;
+    margin-top: 24px;
+    text-align: left;
+    font-size: 17px;
   }
 
   .macro-table th, .macro-table td {
-    padding: 12px 16px;
-    text-align: left;
-    border-bottom: 1px solid rgba(147, 197, 253, 0.35);
+    padding: 18px 16px;
+    border-bottom: 1px solid var(--apple-grey-2);
   }
 
   .macro-table th {
-    background: rgba(219, 234, 254, 0.7);
-    color: var(--blue-900);
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 14px;
+    color: var(--apple-grey-4);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
   }
 
-  .macro-table td { color: var(--ink-soft); }
+  .macro-table td { color: var(--apple-black); }
   .macro-table tr:last-child td { border-bottom: none; }
 
-  /* ---------- Print button (FAB) ---------- */
-  .print-btn-container {
+  /* ---------- PDF FAB ---------- */
+  .pdf-fab {
     position: fixed;
-    bottom: 28px;
-    right: 28px;
-    z-index: 100;
-  }
-
-  .print-btn {
-    padding: 14px 24px;
-    border-radius: 999px;
-    font-size: 1rem;
-    font-weight: 600;
+    bottom: 24px;
+    right: 24px;
+    z-index: 90;
+    background: var(--apple-black);
+    color: #FFFFFF;
+    border: none;
+    padding: 14px 22px;
+    border-radius: 980px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 10px;
-    animation: float-btn 3.5s ease-in-out infinite;
+    gap: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    transition: all 0.2s cubic-bezier(.4, 0, .6, 1);
   }
 
-  @keyframes float-btn {
-    0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-6px); }
+  .pdf-fab:hover {
+    background: #2D2D2F;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.24);
   }
 
-  .print-btn:hover { animation: none; }
-  .print-btn svg { width: 20px; height: 20px; }
+  .pdf-fab svg { width: 18px; height: 18px; }
 
-  /* ---------- Disclaimers ---------- */
-  .disclaimer {
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(14px);
-    border-left: 4px solid var(--blue-500);
-    padding: 16px 20px;
-    border-radius: 12px;
-    margin-top: 16px;
-    font-size: 0.92rem;
-    color: var(--ink);
-  }
-
+  /* ---------- Medical warning ---------- */
   .medical-warning {
-    margin-top: 28px;
-    padding: 22px 26px;
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(255, 255, 255, 0.6));
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(239, 68, 68, 0.25);
-    border-left: 4px solid #DC2626;
-    border-radius: 16px;
-    color: var(--ink);
-    box-shadow: 0 8px 24px rgba(220, 38, 38, 0.08);
+    max-width: 980px;
+    margin: 0 auto;
+    background: #FFFFFF;
+    border-radius: 22px;
+    padding: 40px;
+    text-align: left;
+    border-left: 4px solid var(--apple-red);
   }
 
-  .medical-warning .title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: 'Source Serif 4', Georgia, serif;
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: #991B1B;
-    margin-bottom: 8px;
-  }
-
-  .medical-warning .icon-warn {
-    width: 28px;
-    height: 28px;
-    background: #DC2626;
-    color: white;
-    border-radius: 50%;
+  .medical-warning .badge {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    font-weight: 700;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--apple-red);
+    margin-bottom: 14px;
+  }
+
+  .medical-warning .badge .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--apple-red);
+  }
+
+  .medical-warning h2 {
+    font-size: 28px;
+    line-height: 1.14;
+    color: var(--apple-black);
+    margin-bottom: 14px;
+    letter-spacing: -0.005em;
   }
 
   .medical-warning p {
-    color: var(--ink);
-    font-size: 0.95rem;
-    line-height: 1.65;
+    font-size: 17px;
+    color: var(--apple-grey-4);
+    line-height: 1.6;
   }
 
+  .medical-warning p strong { color: var(--apple-black); font-weight: 600; }
+
+  /* ---------- Footer ---------- */
   footer {
+    background: #F5F5F7;
+    padding: 32px 22px 24px;
+    font-size: 12px;
+    color: var(--apple-grey-3);
     text-align: center;
-    padding: 24px 20px;
-    color: var(--ink-soft);
-    font-size: 0.85rem;
+    border-top: 1px solid var(--apple-grey-2);
+  }
+
+  footer .links {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  footer a {
+    color: var(--apple-grey-3);
+    text-decoration: none;
+  }
+
+  footer a:hover { text-decoration: underline; }
+
+  /* ---------- Section helpers ---------- */
+  .section-eyebrow-row {
+    margin-bottom: 14px;
   }
 
   /* ---------- Responsive ---------- */
-  @media (max-width: 600px) {
-    body { padding: 12px; }
-    .card { padding: 22px 18px; }
-    header { padding: 36px 18px 28px; border-radius: 18px; }
-    .print-btn-container { bottom: 16px; right: 16px; }
-    .print-btn { padding: 12px 18px; font-size: 0.9rem; }
-    .print-btn .text { display: none; }
-    .print-btn svg { width: 22px; height: 22px; }
+  @media (max-width: 734px) {
+    section { padding: 60px 16px; }
+    .form-card { padding: 28px 22px; margin-top: 32px; }
+    .formula-grid { grid-template-columns: 1fr; }
+    .pillars { grid-template-columns: 1fr 1fr; }
+    .pdf-fab { padding: 12px 16px; }
+    .pdf-fab .text { display: none; }
+    .pdf-fab svg { width: 22px; height: 22px; }
+    .medical-warning { padding: 28px 22px; border-radius: 18px; }
+    .result-card { padding: 22px 18px; }
+    .result-card .value { font-size: 36px; }
+  }
+
+  @media (max-width: 480px) {
+    .pillars { grid-template-columns: 1fr; }
   }
 
   /* ---------- Print ---------- */
   @media print {
-    body {
-      padding: 0;
-      background: white;
-      font-size: 11pt;
-    }
-    body::before { display: none; }
-    .container { max-width: 100%; }
-    .print-btn-container { display: none; }
-    .glass, .card {
-      background: white !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-      box-shadow: none;
-      border: 1px solid #ddd;
-      page-break-inside: avoid;
-      margin-bottom: 16px;
-      padding: 20px;
-    }
-    header { padding: 24px; }
-    header::before, header::after { display: none; }
-    .pillar:hover, .result-item:hover { transform: none; }
-    .results { display: block !important; animation: none; background: #EFF6FF !important; }
-    .calc-btn { animation: none; }
-    .medical-warning { background: #FEF2F2 !important; }
-    h1, h2 { color: var(--blue-900); }
+    nav, .pdf-fab { display: none; }
+    body { background: #FFFFFF; }
+    section { padding: 32px 22px; break-inside: avoid; }
+    section.dark { background: #FFFFFF !important; color: var(--apple-black) !important; }
+    section.dark .eyebrow, section.dark .subhead { color: var(--apple-grey-4) !important; }
+    section.dark .formula-card { background: #FFFFFF !important; border-color: var(--apple-grey-2) !important; }
+    section.dark .formula-card .formula { color: var(--apple-black) !important; }
+    section.dark .activity-list li { border-color: var(--apple-grey-2) !important; }
+    section.dark .multiplier { color: var(--apple-blue) !important; }
+    .form-card { box-shadow: none; border: 1px solid var(--apple-grey-2); }
+    .results { display: block !important; animation: none; }
+    .result-card.feature { background: var(--apple-grey-1) !important; color: var(--apple-black) !important; }
+    .result-card.feature .label, .result-card.feature .unit { color: var(--apple-grey-4) !important; }
+    .result-card.feature .value { color: var(--apple-black) !important; }
+    .pillar { box-shadow: none; border: 1px solid var(--apple-grey-2); }
   }
 </style>
 </head>
 <body>
 
-<div class="container">
+<nav>
+  <div class="brand">Déficit Calórico</div>
+  <div class="links">
+    <a href="#calc">Calcular</a>
+    <a href="#formulas">Fórmulas</a>
+    <a href="#pillars">Pilares</a>
+    <a href="#aviso">Aviso médico</a>
+  </div>
+</nav>
 
-  <header class="glass">
-    <h1>Calculadora de Déficit Calórico</h1>
-    <p>Calcule suas calorias diárias para perder até 1 kg por semana de forma saudável, mantendo a massa muscular.</p>
-  </header>
+<!-- HERO -->
+<section id="hero">
+  <div class="container">
+    <p class="eyebrow">Nutrição inteligente</p>
+    <h1>Perca 1 kg por semana.<br/>Sem perder massa.</h1>
+    <p class="subhead">Calcule seu déficit calórico ideal em segundos. Baseado em fórmulas validadas e nos pilares do emagrecimento saudável.</p>
+    <div class="btn-row">
+      <a href="#calc" class="btn btn-primary">Calcular agora</a>
+      <a href="#pillars" class="btn-link">Saiba mais <span class="chev">›</span></a>
+    </div>
+  </div>
+</section>
 
-  <section class="card glass">
-    <span class="step-badge"><span class="num">1</span> Passo 1</span>
-    <h2>Taxa Metabólica Basal (TMB)</h2>
-    <p>Descubra quantas calorias seu corpo gasta em repouso. Preencha os campos abaixo:</p>
+<!-- CALCULADORA -->
+<section id="calc" class="grey">
+  <div class="container">
+    <p class="eyebrow">Passo 1</p>
+    <h2>Sua TMB. Em segundos.</h2>
+    <p class="subhead">Informe seus dados e descubra quantas calorias você gasta — e quantas deve consumir.</p>
 
-    <form id="tmbForm" onsubmit="event.preventDefault(); calcular();">
-      <div class="form-grid">
-        <div class="field">
-          <label>Sexo</label>
-          <div class="gender-toggle">
-            <input type="radio" id="male" name="gender" value="male" checked />
-            <label for="male">Homem</label>
-            <input type="radio" id="female" name="gender" value="female" />
-            <label for="female">Mulher</label>
+    <div class="form-card">
+      <form id="tmbForm" onsubmit="event.preventDefault(); calcular();">
+        <div class="form-grid">
+          <div class="field">
+            <label>Sexo</label>
+            <div class="gender-toggle">
+              <input type="radio" id="male" name="gender" value="male" checked />
+              <label for="male">Homem</label>
+              <input type="radio" id="female" name="gender" value="female" />
+              <label for="female">Mulher</label>
+            </div>
+          </div>
+          <div class="field">
+            <label for="weight">Peso (kg)</label>
+            <input type="number" id="weight" min="30" max="300" step="0.1" placeholder="Ex.: 70" required />
+          </div>
+          <div class="field">
+            <label for="height">Altura (cm)</label>
+            <input type="number" id="height" min="100" max="250" placeholder="Ex.: 175" required />
+          </div>
+          <div class="field">
+            <label for="age">Idade</label>
+            <input type="number" id="age" min="10" max="120" placeholder="Ex.: 30" required />
+          </div>
+          <div class="field" style="grid-column: 1 / -1;">
+            <label for="activity">Nível de atividade física</label>
+            <select id="activity" required>
+              <option value="1.2">Sedentário — ×1,2</option>
+              <option value="1.55" selected>Atividade leve (1 a 3x/semana) — ×1,55</option>
+              <option value="1.725">Atividade intensa (treino pesado) — ×1,725</option>
+            </select>
           </div>
         </div>
-        <div class="field">
-          <label for="weight">Peso (kg)</label>
-          <input type="number" id="weight" min="30" max="300" step="0.1" placeholder="Ex: 70" required />
+        <div class="btn-row" style="justify-content: flex-start;">
+          <button type="submit" class="btn btn-primary">Calcular meu déficit</button>
+          <button type="reset" class="btn btn-secondary" onclick="document.getElementById('results').classList.remove('visible')">Limpar</button>
         </div>
-        <div class="field">
-          <label for="height">Altura (cm)</label>
-          <input type="number" id="height" min="100" max="250" placeholder="Ex: 175" required />
-        </div>
-        <div class="field">
-          <label for="age">Idade (anos)</label>
-          <input type="number" id="age" min="10" max="120" placeholder="Ex: 30" required />
-        </div>
-        <div class="field" style="grid-column: 1 / -1;">
-          <label for="activity">Nível de atividade física</label>
-          <select id="activity" required>
-            <option value="1.2">Sedentário (pouco ou nenhum exercício) — ×1,2</option>
-            <option value="1.55" selected>Atividade Leve (treino 1 a 3x por semana) — ×1,55</option>
-            <option value="1.725">Atividade Intensa (treino pesado e frequente) — ×1,725</option>
-          </select>
-        </div>
-      </div>
-      <button type="submit" class="calc-btn">
-        Calcular meu déficit
-        <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </button>
-    </form>
+      </form>
 
-    <div id="results" class="results">
-      <h3 style="margin-top: 0;">Seus resultados</h3>
+      <div id="results" class="results">
+        <h3>Seus resultados</h3>
 
-      <div class="tip">
-        <div class="tip-title"><span class="badge">Entenda</span> O que cada número significa</div>
-        <p><strong>TMB</strong> é o que seu corpo gasta apenas existindo (respirar, manter temperatura, batimentos). <strong>Manutenção</strong> é a TMB multiplicada pelo seu nível de atividade — comer esse valor mantém o peso. <strong>Déficit</strong> é a meta para emagrecer ≈1 kg/semana sem perder massa muscular.</p>
-      </div>
-
-      <div class="results-grid">
-        <div class="result-item">
-          <span class="label">TMB (Taxa Metabólica Basal)</span>
-          <span class="value" id="tmbValue">0</span><span class="unit">kcal/dia</span>
+        <div class="tip">
+          <span class="tip-label">Entenda</span>
+          <h4>O que cada número significa</h4>
+          <p><strong>TMB</strong> é o que seu corpo gasta apenas existindo — respirar, manter temperatura, batimentos. <strong>Manutenção</strong> é a TMB multiplicada pelo seu nível de atividade: comer esse valor mantém o peso. <strong>Déficit</strong> é a meta para emagrecer cerca de 1 kg por semana sem perder massa muscular.</p>
         </div>
-        <div class="result-item">
-          <span class="label">Manutenção</span>
-          <span class="value" id="maintenanceValue">0</span><span class="unit">kcal/dia</span>
-        </div>
-        <div class="result-item highlight">
-          <span class="label">Déficit para emagrecer</span>
-          <span class="value" id="deficitValue">0</span><span class="unit">kcal/dia</span>
-        </div>
-      </div>
 
-      <div class="tip" style="margin-top: 18px;">
-        <div class="tip-title"><span class="badge">Dica</span> Como usar esses valores no dia a dia</div>
-        <p>Some as calorias dos alimentos consumidos durante o dia e mire no valor de <strong>Déficit</strong>. Use apps como FatSecret, MyFitnessPal ou YAZIO. Pese os alimentos crus na balança — porções "olhômetro" costumam errar em 30% ou mais.</p>
-      </div>
+        <div class="results-grid">
+          <div class="result-card">
+            <span class="label">TMB</span>
+            <span class="value" id="tmbValue">0</span>
+            <span class="unit">kcal/dia</span>
+          </div>
+          <div class="result-card">
+            <span class="label">Manutenção</span>
+            <span class="value" id="maintenanceValue">0</span>
+            <span class="unit">kcal/dia</span>
+          </div>
+          <div class="result-card feature">
+            <span class="label">Déficit para emagrecer</span>
+            <span class="value" id="deficitValue">0</span>
+            <span class="unit">kcal/dia</span>
+          </div>
+        </div>
 
-      <div id="macrosBox" style="margin-top: 20px;">
+        <div class="tip">
+          <span class="tip-label">Dica</span>
+          <h4>Como usar no dia a dia</h4>
+          <p>Some as calorias do que você come durante o dia e mire no valor de <strong>Déficit</strong>. Apps como FatSecret, MyFitnessPal ou YAZIO facilitam o registro. Pese os alimentos crus — porções "no olho" costumam errar em 30% ou mais.</p>
+        </div>
+
         <h3>Suas metas de macronutrientes</h3>
         <table class="macro-table">
           <thead>
@@ -760,88 +781,112 @@
         </table>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section class="card glass">
-    <span class="step-badge"><span class="num">2</span> Passo 2</span>
-    <h2>Fórmulas utilizadas</h2>
-    <p>O cálculo da TMB é feito com base em sexo, peso (kg), altura (cm) e idade:</p>
-    <div class="formula-box">
-      <strong>Homens:</strong> 66,47 + (13,75 × peso) + (5 × altura) − (6,75 × idade)
-    </div>
-    <div class="formula-box">
-      <strong>Mulheres:</strong> 655,1 + (9,56 × peso) + (1,85 × altura) − (4,68 × idade)
+<!-- FÓRMULAS -->
+<section id="formulas" class="dark">
+  <div class="container">
+    <p class="eyebrow">Passo 2</p>
+    <h2>A ciência por trás.</h2>
+    <p class="subhead">A TMB é calculada com fórmulas validadas que consideram sexo, peso, altura e idade.</p>
+
+    <div class="formula-grid">
+      <div class="formula-card">
+        <div class="tag">Homens</div>
+        <div class="formula">66,47 + (13,75 × peso) + (5 × altura) − (6,75 × idade)</div>
+      </div>
+      <div class="formula-card">
+        <div class="tag">Mulheres</div>
+        <div class="formula">655,1 + (9,56 × peso) + (1,85 × altura) − (4,68 × idade)</div>
+      </div>
     </div>
 
-    <h3>Coeficiente de Atividade Física</h3>
-    <p>Multiplique a TMB pelo seu nível de atividade para obter as calorias de manutenção:</p>
+    <h3 style="margin-top: 64px;">Coeficiente de Atividade Física</h3>
+    <p class="subhead" style="font-size: 17px; margin-top: 8px;">Multiplique a TMB pelo seu nível para obter as calorias de manutenção.</p>
     <ul class="activity-list">
-      <li><span>Sedentário</span> <span class="multiplier">×1,2</span></li>
-      <li><span>Atividade Leve (treino 1 a 3x/semana)</span> <span class="multiplier">×1,55</span></li>
-      <li><span>Atividade Intensa (treino pesado e frequente)</span> <span class="multiplier">×1,725</span></li>
+      <li><span>Sedentário</span> <span class="multiplier">× 1,2</span></li>
+      <li><span>Atividade leve · 1 a 3x/semana</span> <span class="multiplier">× 1,55</span></li>
+      <li><span>Atividade intensa · treino pesado</span> <span class="multiplier">× 1,725</span></li>
     </ul>
-  </section>
+  </div>
+</section>
 
-  <section class="card glass">
-    <span class="step-badge"><span class="num">3</span> Passo 3</span>
-    <h2>Criar o Déficit Calórico</h2>
-    <p>Subtraia <strong>500 calorias</strong> do valor de manutenção. Esse novo valor será a sua meta diária para perder aproximadamente <strong>1 kg por semana</strong> de forma saudável.</p>
+<!-- DÉFICIT -->
+<section>
+  <div class="container">
+    <p class="eyebrow">Passo 3</p>
+    <h2>O déficit de 500 kcal.</h2>
+    <p class="subhead">Subtraia 500 calorias do valor de manutenção. Essa é a sua meta diária para perder cerca de 1 kg por semana — de forma saudável e sustentável.</p>
 
-    <div class="formula-box">
-      <strong>Déficit diário:</strong> Calorias de manutenção − 500 kcal
+    <div style="max-width: 720px; margin: 32px auto 0;">
+      <div class="tip">
+        <span class="tip-label">Por quê 500?</span>
+        <h4>A matemática do emagrecimento</h4>
+        <p>1 kg de gordura corporal equivale a aproximadamente <strong>7.700 kcal</strong>. Um déficit de 500 kcal/dia × 7 dias = 3.500 kcal/semana, resultando em ~0,5 kg de gordura "pura" + perda de líquidos e glicogênio, chegando à marca dos <strong>~1 kg/semana</strong> na balança.</p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-label">Cuidado</span>
+        <h4>Não exagere no déficit</h4>
+        <p>Déficits maiores que <strong>700–1000 kcal/dia</strong> aceleram a perda de massa muscular, derrubam o metabolismo, atrapalham o sono e disparam episódios de compulsão. Devagar e sempre ganha da dieta-relâmpago em 100% dos casos.</p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-label">Dica</span>
+        <h4>Reavalie a cada 4–6 semanas</h4>
+        <p>Conforme você emagrece, seu peso diminui e a TMB também. Refaça o cálculo a cada <strong>4 a 6 semanas</strong> com o peso atualizado para manter o déficit correto e evitar o famoso "platô".</p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-label">Hidratação</span>
+        <h4>Beba água antes das refeições</h4>
+        <p>500 ml de água 30 minutos antes da refeição reduz a fome e ajuda a controlar porções. Hidratação adequada (35 ml por kg de peso) também acelera o metabolismo em até 3%.</p>
+      </div>
     </div>
+  </div>
+</section>
 
-    <div class="tip">
-      <div class="tip-title"><span class="badge">Por quê 500?</span> A matemática do emagrecimento</div>
-      <p>1 kg de gordura corporal equivale a aproximadamente <strong>7.700 kcal</strong>. Um déficit de 500 kcal/dia × 7 dias ≈ 3.500 kcal/semana, resultando em ~0,5 kg de gordura "pura" + perda de líquidos e glicogênio, chegando à marca dos <strong>~1 kg/semana</strong> na balança.</p>
-    </div>
+<!-- PILARES -->
+<section id="pillars" class="grey">
+  <div class="container wide">
+    <p class="eyebrow">Passo 4</p>
+    <h2>Quatro pilares.<br/>Resultados que duram.</h2>
+    <p class="subhead">Para preservar a massa muscular e manter resultados a longo prazo.</p>
 
-    <div class="tip">
-      <div class="tip-title"><span class="badge">Cuidado</span> Não exagere no déficit</div>
-      <p>Déficits maiores que <strong>700–1000 kcal/dia</strong> aceleram a perda de massa muscular, derrubam o metabolismo, atrapalham o sono e causam compulsão. <em>Devagar e sempre</em> ganha da dieta-relâmpago em 100% dos casos.</p>
-    </div>
-
-    <div class="tip">
-      <div class="tip-title"><span class="badge">Dica</span> Reavalie a cada 4–6 semanas</div>
-      <p>Conforme você emagrece, seu peso diminui e a TMB também. Refaça o cálculo a cada <strong>4 a 6 semanas</strong> usando seu peso atualizado para manter o déficit correto e evitar o famoso "platô".</p>
-    </div>
-
-    <div class="tip">
-      <div class="tip-title"><span class="badge">Dica</span> Beba água antes das refeições</div>
-      <p>500 ml de água 30 minutos antes da refeição reduz a fome e ajuda a controlar porções. Hidratação adequada (35 ml por kg de peso) também acelera o metabolismo em até 3%.</p>
-    </div>
-  </section>
-
-  <section class="card glass">
-    <span class="step-badge"><span class="num">4</span> Passo 4</span>
-    <h2>Pilares para o Sucesso e Consistência</h2>
-    <p>Para preservar a massa muscular e manter resultados a longo prazo:</p>
-
-    <div class="pillars-grid">
+    <div class="pillars">
       <div class="pillar">
-        <div class="icon">🏋️</div>
+        <span class="icon">🏋️</span>
         <h4>Treino</h4>
         <p>Atividade física de 4 a 5 vezes por semana, com intensidade — nada de "treinar fofo".</p>
       </div>
       <div class="pillar">
-        <div class="icon">🏃</div>
+        <span class="icon">🏃</span>
         <h4>Cardio</h4>
         <p>30 minutos diários de exercício aeróbico em intensidade moderada.</p>
       </div>
       <div class="pillar">
-        <div class="icon">😴</div>
+        <span class="icon">😴</span>
         <h4>Sono</h4>
         <p>Dormir 8 horas por noite ajuda no controle dos hormônios da fome.</p>
       </div>
       <div class="pillar">
-        <div class="icon">🥬</div>
-        <h4>Fibras e Saciedade</h4>
-        <p>Consumir de 300 g a 500 g de legumes e vegetais diariamente para evitar compulsão.</p>
+        <span class="icon">🥬</span>
+        <h4>Fibras</h4>
+        <p>De 300 g a 500 g de legumes e vegetais diariamente para evitar compulsão.</p>
       </div>
     </div>
+  </div>
+</section>
 
-    <h3 style="margin-top: 28px;">Macronutrientes por quilo de peso corporal</h3>
-    <table class="macro-table">
+<!-- MACRONUTRIENTES -->
+<section>
+  <div class="container">
+    <p class="eyebrow">Macronutrientes</p>
+    <h2>Cada grama importa.</h2>
+    <p class="subhead">Macronutrientes por quilo de peso corporal — a base para preservar massa muscular durante o déficit.</p>
+
+    <table class="macro-table" style="max-width: 640px; margin: 32px auto 0;">
       <thead>
         <tr>
           <th>Macronutriente</th>
@@ -855,64 +900,73 @@
       </tbody>
     </table>
 
-    <div class="tip" style="margin-top: 18px;">
-      <div class="tip-title"><span class="badge">Proteína</span> A mais importante no déficit</div>
-      <p>A proteína é <strong>termogênica</strong> (gasta ~25% das próprias calorias para ser digerida), aumenta saciedade e — principalmente — <strong>protege a massa muscular</strong> durante a perda de peso. Fontes: frango, ovo, peixe, carne magra, whey, tofu, lentilha, grão de bico.</p>
+    <div style="max-width: 720px; margin: 32px auto 0;">
+      <div class="tip">
+        <span class="tip-label">Proteína</span>
+        <h4>A mais importante no déficit</h4>
+        <p>A proteína é <strong>termogênica</strong> — gasta ~25% das próprias calorias para ser digerida —, aumenta a saciedade e, principalmente, <strong>protege a massa muscular</strong> durante a perda de peso. Fontes: frango, ovo, peixe, carne magra, whey, tofu, lentilha, grão de bico.</p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-label">Gordura</span>
+        <h4>Essencial, não opcional</h4>
+        <p>Cortar gordura demais prejudica a <strong>produção hormonal</strong> (testosterona, estrogênio, cortisol). Priorize gorduras boas: azeite extravirgem, abacate, castanhas, sardinha, salmão, gema de ovo e sementes (chia, linhaça).</p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-label">Carboidrato</span>
+        <h4>Combustível do treino</h4>
+        <p>Não é vilão. Use a faixa de <strong>3 g/kg em dias sem treino</strong> e até <strong>5 g/kg em dias de treino pesado</strong>. Prefira fontes complexas: arroz, batata-doce, mandioca, aveia, frutas, pão integral. Evite ultraprocessados.</p>
+      </div>
+
+      <div class="tip">
+        <span class="tip-label">Como calcular</span>
+        <h4>Exemplo prático para 70 kg</h4>
+        <p><strong>70 × 1,6 g = 112 g de proteína</strong>. <strong>70 × 0,5 g = 35 g de gordura</strong>. <strong>70 × 4 g = 280 g de carboidrato</strong>. Some as kcal (proteína e carbo = 4 kcal/g; gordura = 9 kcal/g) e ajuste o carboidrato para bater a meta do déficit.</p>
+      </div>
     </div>
+  </div>
+</section>
 
-    <div class="tip">
-      <div class="tip-title"><span class="badge">Gordura</span> Sim, ela é essencial</div>
-      <p>Cortar gordura demais prejudica a <strong>produção hormonal</strong> (testosterona, estrogênio, cortisol). Priorize gorduras boas: azeite extravirgem, abacate, castanhas, sardinha, salmão, gema de ovo, sementes (chia, linhaça).</p>
+<!-- AVISO MÉDICO -->
+<section id="aviso" class="grey">
+  <div class="container">
+    <div class="medical-warning">
+      <div class="badge"><span class="dot"></span> Aviso importante</div>
+      <h2>Procure um endocrinologista.</h2>
+      <p>
+        As informações desta página têm caráter <strong>exclusivamente educativo</strong> e não
+        substituem, em nenhuma hipótese, a avaliação de um profissional de saúde. Antes de
+        iniciar qualquer dieta, protocolo de emagrecimento, suplementação ou programa de
+        exercícios, é <strong>indispensável a consulta com o seu endocrinologista</strong> —
+        médico especializado em metabolismo, hormônios e composição corporal. Apenas ele
+        poderá avaliar exames laboratoriais, identificar condições como hipotireoidismo,
+        resistência à insulina, alterações hormonais e prescrever um plano seguro e
+        personalizado para o seu caso. <strong>Nunca pratique automedicação ou autoprescrição
+        alimentar.</strong>
+      </p>
     </div>
+  </div>
+</section>
 
-    <div class="tip">
-      <div class="tip-title"><span class="badge">Carboidrato</span> Combustível do treino</div>
-      <p>Não é vilão. Use a faixa de <strong>3 g/kg em dias sem treino</strong> e até <strong>5 g/kg em dias de treino pesado</strong>. Prefira fontes complexas: arroz, batata-doce, mandioca, aveia, frutas, pão integral. Evite ultraprocessados.</p>
-    </div>
+<footer>
+  <div>Cálculo baseado em fórmulas validadas de TMB · Para fins educativos</div>
+  <div class="links">
+    <a href="#calc">Calculadora</a>
+    <a href="#formulas">Fórmulas</a>
+    <a href="#pillars">Pilares</a>
+    <a href="#aviso">Aviso médico</a>
+  </div>
+</footer>
 
-    <div class="tip">
-      <div class="tip-title"><span class="badge">Como calcular</span> Exemplo prático</div>
-      <p>Pessoa de <strong>70 kg</strong>: 70 × 1,6 g = <strong>112 g de proteína</strong> · 70 × 0,5 g = <strong>35 g de gordura</strong> · 70 × 4 g = <strong>280 g de carboidrato</strong>. Some as kcal (proteína e carbo = 4 kcal/g · gordura = 9 kcal/g) e ajuste o carboidrato para bater a meta do déficit.</p>
-    </div>
-
-    <div class="disclaimer">
-      💡 <strong>Lembre-se:</strong> esta calculadora é uma estimativa baseada em fórmulas validadas. Os números reais podem variar conforme genética, composição corporal e adaptações metabólicas individuais.
-    </div>
-  </section>
-
-  <section class="medical-warning glass">
-    <div class="title">
-      <span class="icon-warn">!</span>
-      Atenção: Procure um Endocrinologista
-    </div>
-    <p>
-      As informações desta página têm caráter <strong>exclusivamente educativo</strong> e não substituem,
-      em nenhuma hipótese, a avaliação de um profissional de saúde. Antes de iniciar qualquer dieta,
-      protocolo de emagrecimento, suplementação ou programa de exercícios, é <strong>indispensável a
-      consulta com o seu endocrinologista</strong> — médico especializado em metabolismo, hormônios e
-      composição corporal. Apenas ele poderá avaliar exames laboratoriais, identificar condições como
-      hipotireoidismo, resistência à insulina, alterações hormonais e prescrever um plano seguro e
-      personalizado para o seu caso. <strong>Nunca pratique automedicação ou autoprescrição
-      alimentar.</strong>
-    </p>
-  </section>
-
-  <footer>
-    Feito com cuidado · Cálculo baseado em fórmulas validadas de TMB.
-  </footer>
-
-</div>
-
-<div class="print-btn-container">
-  <button class="print-btn" onclick="window.print()" aria-label="Imprimir como PDF">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="6 9 6 2 18 2 18 9"/>
-      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-      <rect x="6" y="14" width="12" height="8"/>
-    </svg>
-    <span class="text">Salvar em PDF</span>
-  </button>
-</div>
+<button class="pdf-fab" onclick="window.print()" aria-label="Salvar em PDF">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="6 9 6 2 18 2 18 9"/>
+    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+    <rect x="6" y="14" width="12" height="8"/>
+  </svg>
+  <span class="text">Salvar em PDF</span>
+</button>
 
 <script>
   function calcular() {
@@ -952,7 +1006,7 @@
 
     const results = document.getElementById('results');
     results.classList.add('visible');
-    results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    setTimeout(() => results.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
   }
 </script>
 
