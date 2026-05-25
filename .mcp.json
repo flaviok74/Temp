@@ -10,6 +10,10 @@
       "env": {
         "GLIF_API_TOKEN": "${GLIF_API_TOKEN}"
       }
+    },
+    "leaflet": {
+      "command": "bash",
+      "args": [".mcp/leaflet-launch.sh"]
     }
   }
 }
