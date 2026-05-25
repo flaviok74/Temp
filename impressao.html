@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Impressão sem pop-up</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 2rem; }
+    button { padding: 0.6rem 1.2rem; font-size: 1rem; cursor: pointer; }
+    #area-impressao { border: 1px solid #ccc; padding: 1rem; margin-top: 1rem; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Exemplo de impressão</h1>
+  <button id="btn-imprimir">Imprimir</button>
+
+  <div id="area-impressao">
+    <h2>Recibo</h2>
+    <p>Cliente: Flávio</p>
+    <p>Data: 25/05/2026</p>
+    <p>Total: R$ 199,90</p>
+  </div>
+
+  <script>
+    // Imprime um trecho de HTML usando um iframe oculto.
+    // Nao usa window.open, entao o navegador nao bloqueia como pop-up.
+    function printHTML(htmlContent) {
+      const iframe = document.createElement('iframe');
+      iframe.style.position = 'fixed';
+      iframe.style.right = '0';
+      iframe.style.bottom = '0';
+      iframe.style.width = '0';
+      iframe.style.height = '0';
+      iframe.style.border = '0';
+      document.body.appendChild(iframe);
+
+      const doc = iframe.contentWindow.document;
+      doc.open();
+      doc.write(
+        '<!DOCTYPE html><html><head><title>Impressao</title></head><body>' +
+        htmlContent +
+        '</body></html>'
+      );
+      doc.close();
+
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+
+      setTimeout(function () { document.body.removeChild(iframe); }, 1000);
+    }
+
+    // Chamado direto no clique (sem setTimeout/async em volta).
+    document.getElementById('btn-imprimir').addEventListener('click', function () {
+      printHTML(document.getElementById('area-impressao').innerHTML);
+    });
+  </script>
+</body>
+</html>
